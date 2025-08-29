@@ -1545,3 +1545,37 @@ select.form-control {
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
+/* ⭐ YEH CODE STYLE.CSS के LAST में PASTE KARO */
+
+/* Credit Display Styles */
+.credit-display {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+    margin-left: 20px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.credit-display:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.credit-display span {
+    font-size: 11px;
+    opacity: 0.9;
+    margin-left: 4px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .credit-display {
+        font-size: 12px;
+        padding: 6px 12px;
+        margin-left: 10px;
+    }
+}

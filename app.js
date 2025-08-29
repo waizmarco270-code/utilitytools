@@ -1,3 +1,262 @@
+// ⭐ WAIZ TOOLS CREDIT SYSTEM - APP.JS KE BILKUL TOP PAR PASTE KARO
+
+let userCredits = 7;
+let isUnlimited = false;
+const expandPassword = "waizmarco@expandcredit";
+
+// Page load hone par sab kuch load karo
+window.addEventListener('load', function() {
+    console.log('Loading WAIZ Tools Credit System...');
+    
+    // Credits load karo
+    const savedCredits = localStorage.getItem('waiz_user_credits');
+    const savedUnlimited = localStorage.getItem('waiz_unlimited_access');
+    const savedTheme = localStorage.getItem('waiz_theme');
+    
+    if (savedCredits !== null) {
+        userCredits = parseInt(savedCredits);
+        console.log('Credits loaded:', userCredits);
+    }
+    
+    if (savedUnlimited === 'true') {
+        isUnlimited = true;
+        console.log('Unlimited access loaded');
+    }
+    
+    // Theme load karo
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.documentElement.setAttribute('data-color-scheme', 'dark');
+        const themeIcon = document.querySelector('.theme-icon');
+        if (themeIcon) themeIcon.textContent = '☀️';
+        console.log('Dark theme loaded');
+    } else if (savedTheme === 'light') {
+        document.body.classList.remove('dark-mode');
+        document.documentElement.setAttribute('data-color-scheme', 'light');
+        const themeIcon = document.querySelector('.theme-icon');
+        if (themeIcon) themeIcon.textContent = '🌙';
+        console.log('Light theme loaded');
+    }
+    
+    // Credit display update karo (थोड़ी देर बाद)
+    setTimeout(updateCreditDisplay, 500);
+    setTimeout(setupThemeEvents, 600);
+});
+
+// Page close hone से पहले सब save karo
+window.addEventListener('beforeunload', function() {
+    localStorage.setItem('waiz_user_credits', userCredits.toString());
+    localStorage.setItem('waiz_unlimited_access', isUnlimited.toString());
+    
+    const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+    localStorage.setItem('waiz_theme', theme);
+    
+    console.log('Data saved before unload');
+});
+
+// Credit display update function
+function updateCreditDisplay() {
+    const creditEl = document.getElementById('credit-counter');
+    if (creditEl) {
+        if (isUnlimited) {
+            creditEl.innerHTML = '∞ <span>Unlimited</span>';
+            creditEl.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+        } else {
+            creditEl.innerHTML = `${userCredits} <span>Credits Left</span>`;
+            if (userCredits > 0) {
+                creditEl.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+            } else {
+                creditEl.style.background = 'linear-gradient(135deg, #EF4444, #DC2626)';
+            }
+        }
+        console.log('Credit display updated:', isUnlimited ? 'Unlimited' : userCredits);
+    }
+}
+
+// Credit check function - हर tool में यह use करना
+function checkCredits() {
+    console.log('Checking credits:', userCredits, 'Unlimited:', isUnlimited);
+    
+    if (isUnlimited) {
+        console.log('Unlimited access - proceeding');
+        return true;
+    }
+    
+    if (userCredits <= 0) {
+        console.log('No credits left - showing modal');
+        showCreditModal();
+        return false;
+    }
+    
+    console.log('Credits available - proceeding');
+    return true;
+}
+
+// Credit use function - success के बाद यह call करना
+function useCredit() {
+    if (!isUnlimited && userCredits > 0) {
+        userCredits--;
+        console.log('Credit used. Remaining:', userCredits);
+        updateCreditDisplay();
+        localStorage.setItem('waiz_user_credits', userCredits.toString());
+    }
+}
+
+// Credit modal show function
+function showCreditModal() {
+    // पहले check करो कि modal already है कि नहीं
+    const existingModal = document.getElementById('credit-modal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    const modal = `
+        <div id="credit-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 9999; font-family: Arial, sans-serif;">
+            <div style="background: white; padding: 35px; border-radius: 20px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.4); animation: modalSlide 0.3s ease;">
+                <div style="font-size: 48px; margin-bottom: 15px;">🚫</div>
+                <h3 style="color: #EF4444; margin: 0 0 15px 0; font-size: 24px; font-weight: bold;">Credits Khatam!</h3>
+                <p style="margin: 10px 0; color: #666; font-size: 16px;">Aapne apne 7 free credits use kar liye hain!</p>
+                <p style="margin: 10px 0 25px 0; color: #333; font-weight: bold; font-size: 14px;">Unlimited access ke liye password enter karo:</p>
+                <input type="password" id="expand-password" placeholder="Password enter karo..." style="width: 100%; padding: 15px; margin: 15px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; outline: none; transition: all 0.3s ease;" onfocus="this.style.borderColor='#667eea';" onblur="this.style.borderColor='#ddd';">
+                <div style="display: flex; gap: 15px; margin-top: 25px;">
+                    <button onclick="verifyPassword()" style="flex: 1; padding: 15px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 16px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">🔓 Unlock</button>
+                    <button onclick="closeModal()" style="flex: 1; padding: 15px; background: #f8f9fa; color: #666; border: 2px solid #e9ecef; border-radius: 10px; cursor: pointer; font-size: 16px; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#e9ecef'" onmouseout="this.style.backgroundColor='#f8f9fa'">❌ Cancel</button>
+                </div>
+            </div>
+        </div>
+        <style>
+            @keyframes modalSlide {
+                from { transform: scale(0.8); opacity: 0; }
+                to { transform: scale(1); opacity: 1; }
+            }
+        </style>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modal);
+    
+    // Password field को focus करो
+    setTimeout(() => {
+        const passwordField = document.getElementById('expand-password');
+        if (passwordField) passwordField.focus();
+    }, 100);
+}
+
+// Password verify function
+function verifyPassword() {
+    const input = document.getElementById('expand-password');
+    if (!input) return;
+    
+    const password = input.value.trim();
+    console.log('Password verification attempt');
+    
+    if (password === expandPassword) {
+        console.log('Password correct - activating unlimited access');
+        isUnlimited = true;
+        localStorage.setItem('waiz_unlimited_access', 'true');
+        updateCreditDisplay();
+        closeModal();
+        
+        // Success message
+        showSuccessAlert('🎉 Unlimited Access Activated!', 'Ab aap unlimited tools use kar sakte hain!');
+    } else {
+        console.log('Password incorrect');
+        showErrorAlert('❌ Galat Password!', 'Please try again with correct password.');
+        input.value = '';
+        input.focus();
+    }
+}
+
+// Modal close function
+function closeModal() {
+    const modal = document.getElementById('credit-modal');
+    if (modal) {
+        modal.style.animation = 'modalSlide 0.3s ease reverse';
+        setTimeout(() => modal.remove(), 300);
+    }
+}
+
+// Success alert function
+function showSuccessAlert(title, message) {
+    const alert = `
+        <div id="success-alert" style="position: fixed; top: 20px; right: 20px; background: linear-gradient(135deg, #10B981, #059669); color: white; padding: 20px; border-radius: 10px; z-index: 10000; max-width: 300px; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3); animation: alertSlide 0.5s ease;">
+            <div style="font-weight: bold; margin-bottom: 5px;">${title}</div>
+            <div style="font-size: 14px; opacity: 0.9;">${message}</div>
+        </div>
+        <style>
+            @keyframes alertSlide {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        </style>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', alert);
+    
+    setTimeout(() => {
+        const alertEl = document.getElementById('success-alert');
+        if (alertEl) alertEl.remove();
+    }, 3000);
+}
+
+// Error alert function
+function showErrorAlert(title, message) {
+    const alert = `
+        <div id="error-alert" style="position: fixed; top: 20px; right: 20px; background: linear-gradient(135deg, #EF4444, #DC2626); color: white; padding: 20px; border-radius: 10px; z-index: 10000; max-width: 300px; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3); animation: alertSlide 0.5s ease;">
+            <div style="font-weight: bold; margin-bottom: 5px;">${title}</div>
+            <div style="font-size: 14px; opacity: 0.9;">${message}</div>
+        </div>
+        <style>
+            @keyframes alertSlide {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        </style>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', alert);
+    
+    setTimeout(() => {
+        const alertEl = document.getElementById('error-alert');
+        if (alertEl) alertEl.remove();
+    }, 3000);
+}
+
+// Theme events setup function
+function setupThemeEvents() {
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle && !themeToggle.hasAttribute('data-credit-setup')) {
+        themeToggle.setAttribute('data-credit-setup', 'true');
+        
+        // Remove existing listeners
+        const newThemeToggle = themeToggle.cloneNode(true);
+        themeToggle.parentNode.replaceChild(newThemeToggle, themeToggle);
+        
+        // Add new listener
+        newThemeToggle.addEventListener('click', function() {
+            const waizTools = window.waizTools;
+            if (waizTools) {
+                waizTools.isDarkMode = !waizTools.isDarkMode;
+                
+                if (waizTools.isDarkMode) {
+                    document.body.classList.add('dark-mode');
+                    document.documentElement.setAttribute('data-color-scheme', 'dark');
+                    document.querySelector('.theme-icon').textContent = '☀️';
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    document.documentElement.setAttribute('data-color-scheme', 'light');
+                    document.querySelector('.theme-icon').textContent = '🌙';
+                }
+                
+                // Save theme
+                localStorage.setItem('waiz_theme', waizTools.isDarkMode ? 'dark' : 'light');
+                console.log('Theme toggled:', waizTools.isDarkMode ? 'Dark' : 'Light');
+            }
+        });
+    }
+}
+
+console.log('✅ WAIZ Tools Credit System Loaded Successfully!');
+
 // WAIZ Tools v2.0 - Fully Functional All-in-One Utility App
 class WaizTools {
     constructor() {
@@ -321,40 +580,44 @@ class WaizTools {
     }
 
     async mergePDFs() {
-        if (this.files.length < 2) {
-            this.showError('Please select at least 2 PDF files to merge.');
-            return;
-        }
-        
-        this.showLoadingModal('Merging PDFs...', 'Combining multiple PDF files into one document');
-        
-        try {
-            const mergedPdf = await PDFLib.PDFDocument.create();
-            
-            for (let i = 0; i < this.files.length; i++) {
-                this.updateProgress((i / this.files.length) * 80, `Processing file ${i + 1} of ${this.files.length}`);
-                
-                const arrayBuffer = await this.files[i].arrayBuffer();
-                const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
-                const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-                copiedPages.forEach((page) => mergedPdf.addPage(page));
-            }
-            
-            this.updateProgress(90, 'Finalizing merged PDF...');
-            const pdfBytes = await mergedPdf.save();
-            this.updateProgress(100, 'Complete!');
-            
-            this.downloadFile(pdfBytes, 'merged_document.pdf', 'application/pdf');
-            this.hideLoadingModal();
-            this.showSuccess(`Successfully merged ${this.files.length} PDF files!`);
-            this.processedFiles++;
-            this.updateStats();
-        } catch (error) {
-            console.error('Error merging PDFs:', error);
-            this.hideLoadingModal();
-            this.showError('Error merging PDFs. Please ensure all files are valid PDF documents.');
-        }
+    if (!checkCredits()) return; // ⭐ ONLY ADD THIS LINE
+    
+    if (this.files.length < 2) {
+        this.showError('Please select at least 2 PDF files to merge.');
+        return;
     }
+    
+    this.showLoadingModal('Merging PDFs...', 'Combining multiple PDF files into one document');
+    
+    try {
+        const mergedPdf = await PDFLib.PDFDocument.create();
+        
+        for (let i = 0; i < this.files.length; i++) {
+            this.updateProgress((i / this.files.length) * 80, `Processing file ${i + 1} of ${this.files.length}`);
+            
+            const arrayBuffer = await this.files[i].arrayBuffer();
+            const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+            const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+            copiedPages.forEach((page) => mergedPdf.addPage(page));
+        }
+        
+        this.updateProgress(90, 'Finalizing merged PDF...');
+        const pdfBytes = await mergedPdf.save();
+        this.updateProgress(100, 'Complete!');
+        
+        this.downloadFile(pdfBytes, 'merged_document.pdf', 'application/pdf');
+        this.hideLoadingModal();
+        this.showSuccess(`Successfully merged ${this.files.length} PDF files!`);
+        useCredit(); // ⭐ ONLY ADD THIS LINE
+        this.processedFiles++;
+        this.updateStats();
+    } catch (error) {
+        console.error('Error merging PDFs:', error);
+        this.hideLoadingModal();
+        this.showError('Error merging PDFs. Please ensure all files are valid PDF documents.');
+    }
+}
+
 
     getPDFSplitterHTML() {
         return `
@@ -583,69 +846,73 @@ class WaizTools {
     }
 
     async removeBackgrounds() {
-        if (this.files.length === 0) return;
-        
-        this.showLoadingModal('Removing backgrounds...', 'Using AI to remove image backgrounds');
-        
-        try {
-            if (this.files.length === 1) {
-                const result = await this.removeBackground(this.files[0]);
-                this.downloadFile(result, `no-bg_${this.files[0].name.replace(/\.[^/.]+$/, '.png')}`, 'image/png');
-                this.hideLoadingModal();
-                this.showSuccess('Background removed successfully!');
-            } else {
-                const zip = new JSZip();
+    if (!checkCredits()) return; // ⭐ ADDED LINE 1
+    
+    if (this.files.length === 0) return;
+    
+    this.showLoadingModal('Removing backgrounds...', 'Using AI to remove image backgrounds');
+    
+    try {
+        if (this.files.length === 1) {
+            const result = await this.removeBackground(this.files[0]);
+            this.downloadFile(result, `no-bg_${this.files[0].name.replace(/\.[^/.]+$/, '.png')}`, 'image/png');
+            this.hideLoadingModal();
+            this.showSuccess('Background removed successfully!');
+        } else {
+            const zip = new JSZip();
+            
+            for (let i = 0; i < this.files.length; i++) {
+                this.updateProgress((i / this.files.length) * 90, `Processing image ${i + 1} of ${this.files.length}`);
                 
-                for (let i = 0; i < this.files.length; i++) {
-                    this.updateProgress((i / this.files.length) * 90, `Processing image ${i + 1} of ${this.files.length}`);
-                    
-                    try {
-                        const result = await this.removeBackground(this.files[i]);
-                        const fileName = `no-bg_${this.files[i].name.replace(/\.[^/.]+$/, '.png')}`;
-                        zip.file(fileName, result);
-                    } catch (error) {
-                        console.error(`Error processing ${this.files[i].name}:`, error);
-                        // Continue with other files
-                    }
+                try {
+                    const result = await this.removeBackground(this.files[i]);
+                    const fileName = `no-bg_${this.files[i].name.replace(/\.[^/.]+$/, '.png')}`;
+                    zip.file(fileName, result);
+                } catch (error) {
+                    console.error(`Error processing ${this.files[i].name}:`, error);
+                    // Continue with other files
                 }
-                
-                this.updateProgress(95, 'Creating ZIP archive...');
-                const zipBlob = await zip.generateAsync({type: 'blob'});
-                this.updateProgress(100, 'Complete!');
-                
-                this.downloadFile(zipBlob, 'background_removed_images.zip', 'application/zip');
-                this.hideLoadingModal();
-                this.showSuccess(`Background removed from ${this.files.length} images!`);
             }
             
-            this.processedFiles += this.files.length;
-            this.updateStats();
-        } catch (error) {
-            console.error('Error removing backgrounds:', error);
+            this.updateProgress(95, 'Creating ZIP archive...');
+            const zipBlob = await zip.generateAsync({type: 'blob'});
+            this.updateProgress(100, 'Complete!');
+            
+            this.downloadFile(zipBlob, 'background_removed_images.zip', 'application/zip');
             this.hideLoadingModal();
-            this.showError('Error removing backgrounds. Please check your internet connection and try again.');
+            this.showSuccess(`Background removed from ${this.files.length} images!`);
         }
+        
+        useCredit(); // ⭐ ADDED LINE 2
+        this.processedFiles += this.files.length;
+        this.updateStats();
+    } catch (error) {
+        console.error('Error removing backgrounds:', error);
+        this.hideLoadingModal();
+        this.showError('Error removing backgrounds. Please check your internet connection and try again.');
     }
+}
 
-    async removeBackground(file) {
-        const formData = new FormData();
-        formData.append('image_file', file);
-        formData.append('size', 'auto');
-        
-        const response = await fetch(this.REMOVE_BG_URL, {
-            method: 'POST',
-            headers: {
-                'X-Api-Key': this.REMOVE_BG_API_KEY
-            },
-            body: formData
-        });
-        
-        if (!response.ok) {
-            throw new Error(`API Error: ${response.status} - ${response.statusText}`);
-        }
-        
-        return await response.blob();
+async removeBackground(file) {
+    const formData = new FormData();
+    formData.append('image_file', file);
+    formData.append('size', 'auto');
+    
+    const response = await fetch(this.REMOVE_BG_URL, {
+        method: 'POST',
+        headers: {
+            'X-Api-Key': this.REMOVE_BG_API_KEY
+        },
+        body: formData
+    });
+    
+    if (!response.ok) {
+        throw new Error(`API Error: ${response.status} - ${response.statusText}`);
     }
+    
+    return await response.blob();
+}
+
 
     getImageCompressorHTML() {
         return `
