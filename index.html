@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAIZ Tools - Your All-in-One Utility Suite - 🌹Free🌹</title>
+    <meta name="description" content="Professional online utility tools for PDF, Word, Image processing, QR codes, and more. Convert, compress, merge files easily.">
+    <meta name="keywords" content="pdf merger, background remover, image compressor, qr generator, file converter, online tools">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛠️</text></svg>">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/browser-image-compression/2.0.2/browser-image-compression.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🛠️</span>
+                    <span class="logo-text">WAIZ Tools</span>
+                    <span class="version-badge">2.0</span>
+                </div>
+                
+                <nav class="nav desktop-nav">
+                    <a href="#" class="nav-link" data-category="pdf-tools">PDF Tools</a>
+                    <a href="#" class="nav-link" data-category="image-tools">Image Tools</a>
+                    <a href="#" class="nav-link" data-category="utilities">Utilities</a>
+                </nav>
+                
+                <div class="header-controls">
+                    <button class="btn btn--secondary theme-toggle" id="themeToggle">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="btn btn--secondary mobile-menu-toggle" id="mobileMenuToggle">
+                        <span class="hamburger"></span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Navigation -->
+            <nav class="mobile-nav" id="mobileNav">
+                <a href="#" class="mobile-nav-link" data-category="pdf-tools">📄 PDF Tools</a>
+                <a href="#" class="mobile-nav-link" data-category="image-tools">🖼️ Image Tools</a>
+                <a href="#" class="mobile-nav-link" data-category="utilities">🛠️ Utilities</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Home Page -->
+            <div id="homePage" class="page active">
+                <div class="hero">
+                    <h1>Your All-in-One Utility Suite - Now Fully Functional</h1>
+                    <p>Professional tools for PDF, Image processing, and utilities. All free, fast, and fully working with dual upload options.</p>
+                    <div class="hero-features">
+                        <span class="feature-badge">✅ Drag & Drop</span>
+                        <span class="feature-badge">✅ Manual Upload</span>
+                        <span class="feature-badge">✅ Batch Processing</span>
+                        <span class="feature-badge">✅ Instant Download</span>
+                    </div>
+                </div>
+                
+                <div class="categories-grid">
+                    <div class="category-card" data-category="pdf-tools">
+                        <div class="category-icon">📄</div>
+                        <h3>PDF Tools</h3>
+                        <p>Merge, split, compress and convert PDF files with complete functionality</p>
+                        <div class="category-tools">
+                            <span>Merger</span>
+                            <span>Splitter</span>
+                            <span>Compressor</span>
+                            <span>+4 more</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-card" data-category="image-tools">
+                        <div class="category-icon">🖼️</div>
+                        <h3>Image Tools</h3>
+                        <p>Remove backgrounds, compress, resize, and convert images with AI-powered processing</p>
+                        <div class="category-tools">
+                            <span>Background Remover</span>
+                            <span>Compressor</span>
+                            <span>Resizer</span>
+                            <span>+1 more</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category-card" data-category="utilities">
+                        <div class="category-icon">🛠️</div>
+                        <h3>Utilities</h3>
+                        <p>QR codes, password generator, unit converter, and text editor</p>
+                        <div class="category-tools">
+                            <span>QR Generator</span>
+                            <span>QR Scanner</span>
+                            <span>Password Gen</span>
+                            <span>+3 more</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Pages -->
+            <div id="categoryPage" class="page">
+                <div class="page-header">
+                    <button class="btn btn--outline back-btn" id="backBtn">← Back</button>
+                    <h1 id="categoryTitle"></h1>
+                </div>
+                <div class="tools-grid" id="toolsGrid"></div>
+            </div>
+
+            <!-- Tool Pages -->
+            <div id="toolPage" class="page">
+                <div class="page-header">
+                    <button class="btn btn--outline back-btn" id="toolBackBtn">← Back</button>
+                    <div>
+                        <h1 id="toolTitle"></h1>
+                        <p id="toolDescription"></p>
+                    </div>
+                </div>
+                <div class="tool-content" id="toolContent"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <p>&copy; 2025 WAIZ Tools v2.0 - Fully Functional Edition</p>
+                    <p>Created By WaizMarco with ❤️</p>
+                </div>
+                <div class="footer-stats">
+                    <div class="stat">
+                        <span class="stat-number" id="toolsUsed">0</span>
+                        <span class="stat-label">Tools Used</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" id="filesProcessed">0</span>
+                        <span class="stat-label">Files Processed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Modal -->
+    <div class="modal hidden" id="loadingModal">
+        <div class="modal-content">
+            <div class="loading-spinner"></div>
+            <h3 id="loadingTitle">Processing...</h3>
+            <p id="loadingText">Please wait while we process your file</p>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="progressPercent">0%</span>
+                    <span id="progressStatus">Starting...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal hidden" id="successModal">
+        <div class="modal-content">
+            <div class="success-icon">✅</div>
+            <h3>Success!</h3>
+            <p id="successMessage">Your file has been processed successfully.</p>
+            <button class="btn btn--primary" id="successOkBtn">OK</button>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal hidden" id="errorModal">
+        <div class="modal-content">
+            <div class="error-icon">❌</div>
+            <h3>Error</h3>
+            <p id="errorMessage">An error occurred while processing your file.</p>
+            <button class="btn btn--primary" id="errorOkBtn">OK</button>
+        </div>
+    </div>
+
+    <!-- Canvas for image processing -->
+    <canvas id="hiddenCanvas" style="display: none;"></canvas>
+
+    <script src="app.js"></script>
+</body>
+</html>
